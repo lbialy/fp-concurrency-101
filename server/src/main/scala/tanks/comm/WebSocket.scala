@@ -7,6 +7,8 @@ import cats.implicits._
 import fs2._
 import monix.catnap.ConcurrentQueue
 import monix.eval.Task
+import java.nio.ByteBuffer
+
 import monix.execution.Scheduler
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
@@ -15,7 +17,8 @@ import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.websocket._
 import org.http4s.websocket.WebSocketFrame
 import org.http4s.websocket.WebSocketFrame._
-import shared.models.{CommMesage, GameState, MovementCommand, WelcomeMessage}
+import scodec.bits.ByteVector
+import shared.models.{CommMessage, GameState, MovementCommand, WelcomeMessage}
 import tanks.game.GameStatus
 
 final class WebSocket(
@@ -31,14 +34,14 @@ final class WebSocket(
       val toClient: Stream[Task, WebSocketFrame] =
         Stream
           .repeatEval(gameStateQueue.poll)
-          .map(s => Text(s.encode.toString()))
+          .map(s => Binary(ByteVector(s.encode)))
 
       val fromClient: Pipe[Task, WebSocketFrame, Unit] = _.evalMap {
         case Close(_) =>
           logger.log("Closing connection!") >> game.stop >> gameStateQueue.clear
-        case Text(t, _) =>
-          CommMesage
-            .decode(t)
+        case Binary(data, _) =>
+          CommMessage
+            .decode(data.toByteBuffer)
             .fold(
               err => logger.log(s"Couldn't parse message: ${err.getMessage}"),
               msg => {
@@ -51,6 +54,9 @@ final class WebSocket(
                 } yield ()
               }
             )
+
+//        case Text(t, _) =>
+
         case f =>
           logger.log(s"Unknown message: $f")
       }

@@ -3,7 +3,7 @@ import sbtcrossproject.{CrossType, crossProject}
 
 val monixVersion = "3.1.0"
 val http4sVersion = "0.20.0-M5"
-val circeVersion = "0.11.1"
+//val circeVersion = "0.11.1"
 
 lazy val commonSettings = Seq(
   version := "1.0",
@@ -18,10 +18,11 @@ lazy val shared =
     .settings(
       name := "shared",
       libraryDependencies ++= Seq(
-        "io.circe" %% "circe-core" % circeVersion,
-        "io.circe" %% "circe-generic" % circeVersion,
-        "io.circe" %% "circe-parser" % circeVersion,
-        "io.circe" %% "circe-generic-extras" % circeVersion
+        "io.suzaku" %% "boopickle" % "1.3.1",
+//        "io.circe" %% "circe-core" % circeVersion,
+//        "io.circe" %% "circe-generic" % circeVersion,
+//        "io.circe" %% "circe-parser" % circeVersion,
+//        "io.circe" %% "circe-generic-extras" % circeVersion
       )
     )
 
@@ -64,9 +65,10 @@ lazy val client = (project in file("client"))
     libraryDependencies ++= Seq(
       "io.monix" %%% "monix" % monixVersion,
       "org.scala-js" %%% "scalajs-dom" % "0.9.6",
-      "io.circe" %%% "circe-core" % circeVersion,
-      "io.circe" %%% "circe-generic" % circeVersion,
-      "io.circe" %%% "circe-parser" % circeVersion,
-      "io.circe" %%% "circe-generic-extras" % circeVersion
+      "io.suzaku" %%% "boopickle" % "1.3.1"
+//      "io.circe" %%% "circe-core" % circeVersion,
+//      "io.circe" %%% "circe-generic" % circeVersion,
+//      "io.circe" %%% "circe-parser" % circeVersion,
+//      "io.circe" %%% "circe-generic-extras" % circeVersion
     )
   ).dependsOn(sharedJS)

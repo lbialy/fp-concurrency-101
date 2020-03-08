@@ -1,10 +1,13 @@
 package shared.models
 
-import io.circe
-import io.circe.generic.extras.Configuration
-import io.circe.generic.extras.auto._
-import io.circe.syntax._
-import io.circe.{Json, KeyDecoder, KeyEncoder}
+//import io.circe
+//import io.circe.generic.extras.Configuration
+//import io.circe.generic.extras.auto._
+//import io.circe.syntax._
+//import io.circe.{Json, KeyDecoder, KeyEncoder}
+import java.nio.ByteBuffer
+
+import boopickle.Default._
 import shared.models.GameObject._
 
 final case class GameState(
@@ -12,7 +15,7 @@ final case class GameState(
   bullets: Map[Int, Bullet],
   environment: Map[(Int, Int), EnvObject]
 ) {
-  def encode: Json = GameState.encode(this)
+  def encode: ByteBuffer = GameState.encode(this)
 }
 
 object GameState {
@@ -91,14 +94,17 @@ object GameState {
     )
   }
 
-  implicit val genDevConfig: Configuration = Configuration.default
+//  implicit val genDevConfig: Configuration = Configuration.default
 
-  implicit val tupleKeyEncoder: KeyEncoder[(Int, Int)] = _.asJson.toString()
-  implicit val tupleKeyDecoder: KeyDecoder[(Int, Int)] = str => io.circe.parser.decode[(Int, Int)](str).toOption
+//  implicit val tupleKeyEncoder: KeyEncoder[(Int, Int)] = _.asJson.toString()
+//  implicit val tupleKeyDecoder: KeyDecoder[(Int, Int)] = str => io.circe.parser.decode[(Int, Int)](str).toOption
 
-  private def encode(msg: GameState): Json =
-    msg.asJson
+  private def encode(msg: GameState): ByteBuffer = Pickle.intoBytes(msg)
 
-  def decode(s: String): Either[circe.Error, GameState] =
-    io.circe.parser.decode[GameState](s)
+  def decode(bb: ByteBuffer): Either[Exception, GameState] =
+    try Right(Unpickle[GameState].fromBytes(bb))
+    catch {
+      case ex: Exception => Left(ex)
+    }
+//    io.circe.parser.decode[GameState](s)
 }
