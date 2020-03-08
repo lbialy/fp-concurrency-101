@@ -19,10 +19,6 @@ lazy val shared =
       name := "shared",
       libraryDependencies ++= Seq(
         "io.suzaku" %% "boopickle" % "1.3.1",
-//        "io.circe" %% "circe-core" % circeVersion,
-//        "io.circe" %% "circe-generic" % circeVersion,
-//        "io.circe" %% "circe-parser" % circeVersion,
-//        "io.circe" %% "circe-generic-extras" % circeVersion
       )
     )
 
@@ -65,10 +61,6 @@ lazy val client = (project in file("client"))
     libraryDependencies ++= Seq(
       "io.monix" %%% "monix" % monixVersion,
       "org.scala-js" %%% "scalajs-dom" % "0.9.6",
-      "io.suzaku" %%% "boopickle" % "1.3.1"
-//      "io.circe" %%% "circe-core" % circeVersion,
-//      "io.circe" %%% "circe-generic" % circeVersion,
-//      "io.circe" %%% "circe-parser" % circeVersion,
-//      "io.circe" %%% "circe-generic-extras" % circeVersion
+      "io.suzaku" %%% "boopickle" % "1.3.1",
     )
   ).dependsOn(sharedJS)

@@ -1,10 +1,5 @@
 package shared.models
 
-//import io.circe
-//import io.circe.Json
-//import io.circe.generic.extras.Configuration
-//import io.circe.generic.extras.auto._
-//import io.circe.syntax._
 import java.nio.ByteBuffer
 
 import boopickle.Default._

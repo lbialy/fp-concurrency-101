@@ -1,10 +1,5 @@
 package shared.models
 
-//import io.circe
-//import io.circe.generic.extras.Configuration
-//import io.circe.generic.extras.auto._
-//import io.circe.syntax._
-//import io.circe.{Json, KeyDecoder, KeyEncoder}
 import java.nio.ByteBuffer
 
 import boopickle.Default._
@@ -94,11 +89,6 @@ object GameState {
     )
   }
 
-//  implicit val genDevConfig: Configuration = Configuration.default
-
-//  implicit val tupleKeyEncoder: KeyEncoder[(Int, Int)] = _.asJson.toString()
-//  implicit val tupleKeyDecoder: KeyDecoder[(Int, Int)] = str => io.circe.parser.decode[(Int, Int)](str).toOption
-
   private def encode(msg: GameState): ByteBuffer = Pickle.intoBytes(msg)
 
   def decode(bb: ByteBuffer): Either[Exception, GameState] =
@@ -106,5 +96,5 @@ object GameState {
     catch {
       case ex: Exception => Left(ex)
     }
-//    io.circe.parser.decode[GameState](s)
+
 }
